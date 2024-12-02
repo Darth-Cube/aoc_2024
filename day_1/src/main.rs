@@ -12,6 +12,7 @@ macro_rules! add_to_binheap {
 
 fn main() {
     part_1("input.txt").unwrap();
+    part_2("input.txt").unwrap();
 }
 
 fn part_1(file_name: &str) -> io::Result<()> {
@@ -32,6 +33,28 @@ fn part_1(file_name: &str) -> io::Result<()> {
     for _ in 0..data_1.len() {
         result += (data_1.pop().unwrap().0).abs_diff(data_2.pop().unwrap().0);
     }
-    print!("{}", result);
+    println!("{}", result);
+    Ok(())
+}
+
+fn part_2(file_name: &str) -> io::Result<()> {
+    let file = File::open(file_name)?;
+    let reader = BufReader::new(file);
+
+    let mut data_1 = Vec::new();
+    let mut data_2 = Vec::new();
+    let mut result = 0;
+    //let mut diff = Vec::new();
+
+    for line in reader.lines().map(|l| l.unwrap()) {
+        let values: Vec<_> = line.split_whitespace().collect();
+        data_1.push(values[0].parse::<u32>().unwrap()); 
+        data_2.push(values[1].parse::<u32>().unwrap());
+    }
+    for _ in 0..data_1.len() {
+        let value = data_1.pop().unwrap();
+        result += (value) * data_2.iter().filter(|&n|*n == value).count() as u32;
+    }
+    println!("{}", result);
     Ok(())
 }
